@@ -1,0 +1,438 @@
+
+Lab3_ADC.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         000001be  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000012  00800060  000001be  00000232  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .comment      00000030  00000000  00000000  00000244  2**0
+                  CONTENTS, READONLY
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000274  2**2
+                  CONTENTS, READONLY
+  4 .debug_aranges 00000098  00000000  00000000  000002b0  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   00000a38  00000000  00000000  00000348  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 00000796  00000000  00000000  00000d80  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   00000556  00000000  00000000  00001516  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  00000118  00000000  00000000  00001a6c  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    000003cb  00000000  00000000  00001b84  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_loc    00000269  00000000  00000000  00001f4f  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000068  00000000  00000000  000021b8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	12 c0       	rjmp	.+36     	; 0x26 <__ctors_end>
+   2:	24 c0       	rjmp	.+72     	; 0x4c <__bad_interrupt>
+   4:	23 c0       	rjmp	.+70     	; 0x4c <__bad_interrupt>
+   6:	22 c0       	rjmp	.+68     	; 0x4c <__bad_interrupt>
+   8:	21 c0       	rjmp	.+66     	; 0x4c <__bad_interrupt>
+   a:	20 c0       	rjmp	.+64     	; 0x4c <__bad_interrupt>
+   c:	1f c0       	rjmp	.+62     	; 0x4c <__bad_interrupt>
+   e:	1e c0       	rjmp	.+60     	; 0x4c <__bad_interrupt>
+  10:	1d c0       	rjmp	.+58     	; 0x4c <__bad_interrupt>
+  12:	1c c0       	rjmp	.+56     	; 0x4c <__bad_interrupt>
+  14:	1b c0       	rjmp	.+54     	; 0x4c <__bad_interrupt>
+  16:	1a c0       	rjmp	.+52     	; 0x4c <__bad_interrupt>
+  18:	19 c0       	rjmp	.+50     	; 0x4c <__bad_interrupt>
+  1a:	18 c0       	rjmp	.+48     	; 0x4c <__bad_interrupt>
+  1c:	17 c0       	rjmp	.+46     	; 0x4c <__bad_interrupt>
+  1e:	16 c0       	rjmp	.+44     	; 0x4c <__bad_interrupt>
+  20:	15 c0       	rjmp	.+42     	; 0x4c <__bad_interrupt>
+  22:	14 c0       	rjmp	.+40     	; 0x4c <__bad_interrupt>
+  24:	13 c0       	rjmp	.+38     	; 0x4c <__bad_interrupt>
+
+00000026 <__ctors_end>:
+  26:	11 24       	eor	r1, r1
+  28:	1f be       	out	0x3f, r1	; 63
+  2a:	cf e5       	ldi	r28, 0x5F	; 95
+  2c:	d4 e0       	ldi	r29, 0x04	; 4
+  2e:	de bf       	out	0x3e, r29	; 62
+  30:	cd bf       	out	0x3d, r28	; 61
+
+00000032 <__do_copy_data>:
+  32:	10 e0       	ldi	r17, 0x00	; 0
+  34:	a0 e6       	ldi	r26, 0x60	; 96
+  36:	b0 e0       	ldi	r27, 0x00	; 0
+  38:	ee eb       	ldi	r30, 0xBE	; 190
+  3a:	f1 e0       	ldi	r31, 0x01	; 1
+  3c:	02 c0       	rjmp	.+4      	; 0x42 <__SREG__+0x3>
+  3e:	05 90       	lpm	r0, Z+
+  40:	0d 92       	st	X+, r0
+  42:	a2 37       	cpi	r26, 0x72	; 114
+  44:	b1 07       	cpc	r27, r17
+  46:	d9 f7       	brne	.-10     	; 0x3e <__SP_H__>
+  48:	11 d0       	rcall	.+34     	; 0x6c <main>
+  4a:	b7 c0       	rjmp	.+366    	; 0x1ba <_exit>
+
+0000004c <__bad_interrupt>:
+  4c:	d9 cf       	rjmp	.-78     	; 0x0 <__vectors>
+
+0000004e <EEPROM_write>:
+
+
+void EEPROM_write(UI address, UC data)
+{
+	/* Wait for completion of previous write */
+	while(EECR & (1<<EEWE))
+  4e:	e1 99       	sbic	0x1c, 1	; 28
+  50:	fe cf       	rjmp	.-4      	; 0x4e <EEPROM_write>
+	;
+	/* Set up address and data registers */
+	EEAR = address;
+  52:	9f bb       	out	0x1f, r25	; 31
+  54:	8e bb       	out	0x1e, r24	; 30
+	EEDR = data;
+  56:	6d bb       	out	0x1d, r22	; 29
+	/* Write logical one to EEMWE */
+	EECR |= (1<<EEMWE);
+  58:	e2 9a       	sbi	0x1c, 2	; 28
+	/* Start eeprom write by setting EEWE */
+	EECR |= (1<<EEWE);
+  5a:	e1 9a       	sbi	0x1c, 1	; 28
+  5c:	08 95       	ret
+
+0000005e <EEPROM_read>:
+}
+
+unsigned char EEPROM_read(UI address)
+{
+	/* Wait for completion of previous write */
+	while(EECR & (1<<EEWE))
+  5e:	e1 99       	sbic	0x1c, 1	; 28
+  60:	fe cf       	rjmp	.-4      	; 0x5e <EEPROM_read>
+	;
+	/* Set up address register */
+	EEAR = address;
+  62:	9f bb       	out	0x1f, r25	; 31
+  64:	8e bb       	out	0x1e, r24	; 30
+	/* Start eeprom read by writing EERE */
+	EECR |= (1<<EERE);
+  66:	e0 9a       	sbi	0x1c, 0	; 28
+	/* Return data from data register */
+	return EEDR;
+  68:	8d b3       	in	r24, 0x1d	; 29
+}
+  6a:	08 95       	ret
+
+0000006c <main>:
+
+void EEPROM_write(UI address, UC data);
+unsigned char EEPROM_read(UI address);
+
+int main(void)
+{
+  6c:	cf 92       	push	r12
+  6e:	df 92       	push	r13
+  70:	ef 92       	push	r14
+  72:	ff 92       	push	r15
+  74:	0f 93       	push	r16
+  76:	1f 93       	push	r17
+  78:	cf 93       	push	r28
+  7a:	df 93       	push	r29
+  7c:	cd b7       	in	r28, 0x3d	; 61
+  7e:	de b7       	in	r29, 0x3e	; 62
+  80:	c1 50       	subi	r28, 0x01	; 1
+  82:	d2 40       	sbci	r29, 0x02	; 2
+  84:	0f b6       	in	r0, 0x3f	; 63
+  86:	f8 94       	cli
+  88:	de bf       	out	0x3e, r29	; 62
+  8a:	0f be       	out	0x3f, r0	; 63
+  8c:	cd bf       	out	0x3d, r28	; 61
+	
+	UC arr[511];
+	UC run = 1;
+	UC C1, C2;
+	DDRB = 0x01;
+  8e:	81 e0       	ldi	r24, 0x01	; 1
+  90:	87 bb       	out	0x17, r24	; 23
+	PORTB |= 0x01;
+  92:	c0 9a       	sbi	0x18, 0	; 24
+	USART_init(MyBaud);
+  94:	83 e3       	ldi	r24, 0x33	; 51
+  96:	90 e0       	ldi	r25, 0x00	; 0
+  98:	73 d0       	rcall	.+230    	; 0x180 <USART_init>
+	
+	ADC_init();
+  9a:	65 d0       	rcall	.+202    	; 0x166 <ADC_init>
+
+	while (run)
+	{
+		ADCSRA|=(1<<ADSC);
+  9c:	36 9a       	sbi	0x06, 6	; 6
+		while((ADCSRA&(1<<ADIF))==0);
+  9e:	34 9b       	sbis	0x06, 4	; 6
+  a0:	fe cf       	rjmp	.-4      	; 0x9e <main+0x32>
+		// Multiply by 4 to know the actual value.
+		// Example, 0.5V converts to ADC_value of: (0.5*1024)/5 = 102.4 
+		// 102.4/4 = 25.6 in decimal. That's roughly 0x19 in hex. 
+		int i = 0;
+		UI addr = 0x0000;
+		PORTB = 0x01;
+  a2:	81 e0       	ldi	r24, 0x01	; 1
+  a4:	88 bb       	out	0x18, r24	; 24
+  a6:	ce 01       	movw	r24, r28
+  a8:	01 96       	adiw	r24, 0x01	; 1
+  aa:	7c 01       	movw	r14, r24
+  ac:	6e 01       	movw	r12, r28
+  ae:	9f ef       	ldi	r25, 0xFF	; 255
+  b0:	c9 1a       	sub	r12, r25
+  b2:	9d ef       	ldi	r25, 0xFD	; 253
+  b4:	d9 0a       	sbc	r13, r25
+  b6:	87 01       	movw	r16, r14
+		
+		//read adc values every 2 ms to get a full period of sinewave with f=1Hz
+		while(i < 512){
+			arr[i] = start_conversion();
+  b8:	5d d0       	rcall	.+186    	; 0x174 <start_conversion>
+  ba:	f8 01       	movw	r30, r16
+  bc:	81 93       	st	Z+, r24
+  be:	8f 01       	movw	r16, r30
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+  c0:	8f e9       	ldi	r24, 0x9F	; 159
+  c2:	9f e0       	ldi	r25, 0x0F	; 15
+  c4:	01 97       	sbiw	r24, 0x01	; 1
+  c6:	f1 f7       	brne	.-4      	; 0xc4 <main+0x58>
+  c8:	00 c0       	rjmp	.+0      	; 0xca <main+0x5e>
+  ca:	00 00       	nop
+		int i = 0;
+		UI addr = 0x0000;
+		PORTB = 0x01;
+		
+		//read adc values every 2 ms to get a full period of sinewave with f=1Hz
+		while(i < 512){
+  cc:	ec 15       	cp	r30, r12
+  ce:	fd 05       	cpc	r31, r13
+  d0:	99 f7       	brne	.-26     	; 0xb8 <main+0x4c>
+		}
+		
+		//reset variables
+		i = 0;
+		addr = 0x0000;
+		PORTB ^=0x01;
+  d2:	98 b3       	in	r25, 0x18	; 24
+  d4:	81 e0       	ldi	r24, 0x01	; 1
+  d6:	89 27       	eor	r24, r25
+  d8:	88 bb       	out	0x18, r24	; 24
+			i++;
+			_delay_ms(2);
+		}
+		
+		//reset variables
+		i = 0;
+  da:	00 e0       	ldi	r16, 0x00	; 0
+  dc:	10 e0       	ldi	r17, 0x00	; 0
+		addr = 0x0000;
+		PORTB ^=0x01;
+		
+		//write values to EEPROM
+		while(i < 512) {
+			EEPROM_write(addr, arr[i]);
+  de:	f7 01       	movw	r30, r14
+  e0:	61 91       	ld	r22, Z+
+  e2:	7f 01       	movw	r14, r30
+  e4:	c8 01       	movw	r24, r16
+  e6:	b3 df       	rcall	.-154    	; 0x4e <EEPROM_write>
+			i++;
+  e8:	0f 5f       	subi	r16, 0xFF	; 255
+  ea:	1f 4f       	sbci	r17, 0xFF	; 255
+		i = 0;
+		addr = 0x0000;
+		PORTB ^=0x01;
+		
+		//write values to EEPROM
+		while(i < 512) {
+  ec:	01 15       	cp	r16, r1
+  ee:	f2 e0       	ldi	r31, 0x02	; 2
+  f0:	1f 07       	cpc	r17, r31
+  f2:	a9 f7       	brne	.-22     	; 0xde <main+0x72>
+  f4:	00 e0       	ldi	r16, 0x00	; 0
+  f6:	10 e0       	ldi	r17, 0x00	; 0
+			hex2ascii(data, &C1, &C2);
+			USART_Transmit('\n');
+			USART_Transmit('\r');
+			USART_Transmit(C1);
+			USART_Transmit(C2);
+			PORTB ^= 0x01;
+  f8:	ff 24       	eor	r15, r15
+  fa:	f3 94       	inc	r15
+		i = 0;
+		addr = 0;
+		
+		//read values from EEPROM and write to putty
+		while(i < 512){
+			UC data = EEPROM_read(addr);
+  fc:	c8 01       	movw	r24, r16
+  fe:	af df       	rcall	.-162    	; 0x5e <EEPROM_read>
+			hex2ascii(data, &C1, &C2);
+ 100:	ae 01       	movw	r20, r28
+ 102:	4f 5f       	subi	r20, 0xFF	; 255
+ 104:	5d 4f       	sbci	r21, 0xFD	; 253
+ 106:	be 01       	movw	r22, r28
+ 108:	7e 5f       	subi	r23, 0xFE	; 254
+ 10a:	45 d0       	rcall	.+138    	; 0x196 <hex2ascii>
+			USART_Transmit('\n');
+ 10c:	8a e0       	ldi	r24, 0x0A	; 10
+ 10e:	3f d0       	rcall	.+126    	; 0x18e <USART_Transmit>
+			USART_Transmit('\r');
+ 110:	8d e0       	ldi	r24, 0x0D	; 13
+ 112:	3d d0       	rcall	.+122    	; 0x18e <USART_Transmit>
+			USART_Transmit(C1);
+ 114:	c0 50       	subi	r28, 0x00	; 0
+ 116:	de 4f       	sbci	r29, 0xFE	; 254
+ 118:	88 81       	ld	r24, Y
+ 11a:	c0 50       	subi	r28, 0x00	; 0
+ 11c:	d2 40       	sbci	r29, 0x02	; 2
+ 11e:	37 d0       	rcall	.+110    	; 0x18e <USART_Transmit>
+			USART_Transmit(C2);
+ 120:	cf 5f       	subi	r28, 0xFF	; 255
+ 122:	dd 4f       	sbci	r29, 0xFD	; 253
+ 124:	88 81       	ld	r24, Y
+ 126:	c1 50       	subi	r28, 0x01	; 1
+ 128:	d2 40       	sbci	r29, 0x02	; 2
+ 12a:	31 d0       	rcall	.+98     	; 0x18e <USART_Transmit>
+			PORTB ^= 0x01;
+ 12c:	88 b3       	in	r24, 0x18	; 24
+ 12e:	8f 25       	eor	r24, r15
+ 130:	88 bb       	out	0x18, r24	; 24
+			i++;
+ 132:	0f 5f       	subi	r16, 0xFF	; 255
+ 134:	1f 4f       	sbci	r17, 0xFF	; 255
+		//reset variables
+		i = 0;
+		addr = 0;
+		
+		//read values from EEPROM and write to putty
+		while(i < 512){
+ 136:	01 15       	cp	r16, r1
+ 138:	82 e0       	ldi	r24, 0x02	; 2
+ 13a:	18 07       	cpc	r17, r24
+ 13c:	f9 f6       	brne	.-66     	; 0xfc <main+0x90>
+			USART_Transmit(C2);
+			PORTB ^= 0x01;
+			i++;
+			addr++;
+		}
+		PORTB = 0x01;
+ 13e:	81 e0       	ldi	r24, 0x01	; 1
+ 140:	88 bb       	out	0x18, r24	; 24
+		run = 0;
+	}
+	return 0 ;
+}
+ 142:	80 e0       	ldi	r24, 0x00	; 0
+ 144:	90 e0       	ldi	r25, 0x00	; 0
+ 146:	cf 5f       	subi	r28, 0xFF	; 255
+ 148:	dd 4f       	sbci	r29, 0xFD	; 253
+ 14a:	0f b6       	in	r0, 0x3f	; 63
+ 14c:	f8 94       	cli
+ 14e:	de bf       	out	0x3e, r29	; 62
+ 150:	0f be       	out	0x3f, r0	; 63
+ 152:	cd bf       	out	0x3d, r28	; 61
+ 154:	df 91       	pop	r29
+ 156:	cf 91       	pop	r28
+ 158:	1f 91       	pop	r17
+ 15a:	0f 91       	pop	r16
+ 15c:	ff 90       	pop	r15
+ 15e:	ef 90       	pop	r14
+ 160:	df 90       	pop	r13
+ 162:	cf 90       	pop	r12
+ 164:	08 95       	ret
+
+00000166 <ADC_init>:
+#include <avr/io.h>
+#include "MyADC.h"
+
+
+void ADC_init(void){
+	ADCSRA |= (1<<ADEN) | (1<<ADPS2) | (1<<ADPS1) | (1<<ADPS0);   // ADC enable, pre-scalar set to divide clock by 128
+ 166:	86 b1       	in	r24, 0x06	; 6
+ 168:	87 68       	ori	r24, 0x87	; 135
+ 16a:	86 b9       	out	0x06, r24	; 6
+	ADMUX |= (1<<REFS0) | (1<<ADLAR);   // Vref is Vcc, left-adjusted
+ 16c:	87 b1       	in	r24, 0x07	; 7
+ 16e:	80 66       	ori	r24, 0x60	; 96
+ 170:	87 b9       	out	0x07, r24	; 7
+ 172:	08 95       	ret
+
+00000174 <start_conversion>:
+}
+
+
+unsigned char start_conversion(void){
+	ADCSRA |= (1<<ADSC);
+ 174:	36 9a       	sbi	0x06, 6	; 6
+	while (!(ADCSRA & (1<<ADIF)));
+ 176:	34 9b       	sbis	0x06, 4	; 6
+ 178:	fe cf       	rjmp	.-4      	; 0x176 <start_conversion+0x2>
+	ADMUX |= (1<<ADLAR);   // Left adjust result.
+ 17a:	3d 9a       	sbi	0x07, 5	; 7
+	return ADCH;   //Take only the high 8 bits and drop the lower 2 bits. Equivalent to dividing result by 4.
+ 17c:	85 b1       	in	r24, 0x05	; 5
+ 17e:	08 95       	ret
+
+00000180 <USART_init>:
+	int k = 0;
+	while (msg[k] !=0) {
+		USART_Transmit(msg[k]);
+		k = k + 1;
+	}
+}
+ 180:	90 bd       	out	0x20, r25	; 32
+ 182:	89 b9       	out	0x09, r24	; 9
+ 184:	88 e1       	ldi	r24, 0x18	; 24
+ 186:	8a b9       	out	0x0a, r24	; 10
+ 188:	86 e8       	ldi	r24, 0x86	; 134
+ 18a:	80 bd       	out	0x20, r24	; 32
+ 18c:	08 95       	ret
+
+0000018e <USART_Transmit>:
+ 18e:	5d 9b       	sbis	0x0b, 5	; 11
+ 190:	fe cf       	rjmp	.-4      	; 0x18e <USART_Transmit>
+ 192:	8c b9       	out	0x0c, r24	; 12
+ 194:	08 95       	ret
+
+00000196 <hex2ascii>:
+
+
+void hex2ascii(UC inc, UC *c1, UC *c2){
+	(*c1)=asctab[(inc>>4)&0x0f];
+ 196:	e8 2f       	mov	r30, r24
+ 198:	e2 95       	swap	r30
+ 19a:	ef 70       	andi	r30, 0x0F	; 15
+ 19c:	f0 e0       	ldi	r31, 0x00	; 0
+ 19e:	e0 5a       	subi	r30, 0xA0	; 160
+ 1a0:	ff 4f       	sbci	r31, 0xFF	; 255
+ 1a2:	90 81       	ld	r25, Z
+ 1a4:	fb 01       	movw	r30, r22
+ 1a6:	90 83       	st	Z, r25
+	(*c2)=asctab[inc& 0x0f];
+ 1a8:	8f 70       	andi	r24, 0x0F	; 15
+ 1aa:	e8 2f       	mov	r30, r24
+ 1ac:	f0 e0       	ldi	r31, 0x00	; 0
+ 1ae:	e0 5a       	subi	r30, 0xA0	; 160
+ 1b0:	ff 4f       	sbci	r31, 0xFF	; 255
+ 1b2:	80 81       	ld	r24, Z
+ 1b4:	fa 01       	movw	r30, r20
+ 1b6:	80 83       	st	Z, r24
+ 1b8:	08 95       	ret
+
+000001ba <_exit>:
+ 1ba:	f8 94       	cli
+
+000001bc <__stop_program>:
+ 1bc:	ff cf       	rjmp	.-2      	; 0x1bc <__stop_program>
