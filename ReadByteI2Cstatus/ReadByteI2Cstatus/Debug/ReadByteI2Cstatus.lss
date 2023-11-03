@@ -1,0 +1,267 @@
+
+ReadByteI2Cstatus.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         000000f2  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000000  00800060  00800060  00000146  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .comment      00000030  00000000  00000000  00000146  2**0
+                  CONTENTS, READONLY
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000178  2**2
+                  CONTENTS, READONLY
+  4 .debug_aranges 00000070  00000000  00000000  000001b4  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   000007ac  00000000  00000000  00000224  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 00000602  00000000  00000000  000009d0  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   000003ce  00000000  00000000  00000fd2  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  000000b0  00000000  00000000  000013a0  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    00000381  00000000  00000000  00001450  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_loc    000000f7  00000000  00000000  000017d1  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000050  00000000  00000000  000018c8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	12 c0       	rjmp	.+36     	; 0x26 <__ctors_end>
+   2:	19 c0       	rjmp	.+50     	; 0x36 <__bad_interrupt>
+   4:	18 c0       	rjmp	.+48     	; 0x36 <__bad_interrupt>
+   6:	17 c0       	rjmp	.+46     	; 0x36 <__bad_interrupt>
+   8:	16 c0       	rjmp	.+44     	; 0x36 <__bad_interrupt>
+   a:	15 c0       	rjmp	.+42     	; 0x36 <__bad_interrupt>
+   c:	14 c0       	rjmp	.+40     	; 0x36 <__bad_interrupt>
+   e:	13 c0       	rjmp	.+38     	; 0x36 <__bad_interrupt>
+  10:	12 c0       	rjmp	.+36     	; 0x36 <__bad_interrupt>
+  12:	11 c0       	rjmp	.+34     	; 0x36 <__bad_interrupt>
+  14:	10 c0       	rjmp	.+32     	; 0x36 <__bad_interrupt>
+  16:	0f c0       	rjmp	.+30     	; 0x36 <__bad_interrupt>
+  18:	0e c0       	rjmp	.+28     	; 0x36 <__bad_interrupt>
+  1a:	0d c0       	rjmp	.+26     	; 0x36 <__bad_interrupt>
+  1c:	0c c0       	rjmp	.+24     	; 0x36 <__bad_interrupt>
+  1e:	0b c0       	rjmp	.+22     	; 0x36 <__bad_interrupt>
+  20:	0a c0       	rjmp	.+20     	; 0x36 <__bad_interrupt>
+  22:	09 c0       	rjmp	.+18     	; 0x36 <__bad_interrupt>
+  24:	08 c0       	rjmp	.+16     	; 0x36 <__bad_interrupt>
+
+00000026 <__ctors_end>:
+  26:	11 24       	eor	r1, r1
+  28:	1f be       	out	0x3f, r1	; 63
+  2a:	cf e5       	ldi	r28, 0x5F	; 95
+  2c:	d4 e0       	ldi	r29, 0x04	; 4
+  2e:	de bf       	out	0x3e, r29	; 62
+  30:	cd bf       	out	0x3d, r28	; 61
+  32:	4c d0       	rcall	.+152    	; 0xcc <main>
+  34:	5c c0       	rjmp	.+184    	; 0xee <_exit>
+
+00000036 <__bad_interrupt>:
+  36:	e4 cf       	rjmp	.-56     	; 0x0 <__vectors>
+
+00000038 <i2c_init>:
+
+#include "EEPROMdev.h"
+
+void i2c_init(void)
+{
+  TWSR=0x00;			
+  38:	11 b8       	out	0x01, r1	; 1
+  TWBR=0x47;			
+  3a:	87 e4       	ldi	r24, 0x47	; 71
+  3c:	80 b9       	out	0x00, r24	; 0
+  TWCR=0x04;		
+  3e:	84 e0       	ldi	r24, 0x04	; 4
+  40:	86 bf       	out	0x36, r24	; 54
+  42:	08 95       	ret
+
+00000044 <i2c_start>:
+}
+
+void i2c_start(void)
+{
+  TWCR = (1 << TWINT) | (1 << TWSTA) | (1 << TWEN);
+  44:	84 ea       	ldi	r24, 0xA4	; 164
+  46:	86 bf       	out	0x36, r24	; 54
+  while ((TWCR & (1 << TWINT)) == 0);
+  48:	06 b6       	in	r0, 0x36	; 54
+  4a:	07 fe       	sbrs	r0, 7
+  4c:	fd cf       	rjmp	.-6      	; 0x48 <i2c_start+0x4>
+}
+  4e:	08 95       	ret
+
+00000050 <i2c_write>:
+
+void i2c_write(unsigned char data)
+{
+  TWDR = data ;
+  50:	83 b9       	out	0x03, r24	; 3
+  TWCR = (1<< TWINT)|(1<<TWEN);
+  52:	84 e8       	ldi	r24, 0x84	; 132
+  54:	86 bf       	out	0x36, r24	; 54
+  while ((TWCR & (1 <<TWINT)) == 0);
+  56:	06 b6       	in	r0, 0x36	; 54
+  58:	07 fe       	sbrs	r0, 7
+  5a:	fd cf       	rjmp	.-6      	; 0x56 <i2c_write+0x6>
+}
+  5c:	08 95       	ret
+
+0000005e <i2c_read>:
+
+unsigned char i2c_read(unsigned char isLast)
+{
+  if (isLast == 0)		
+  5e:	81 11       	cpse	r24, r1
+  60:	03 c0       	rjmp	.+6      	; 0x68 <i2c_read+0xa>
+    TWCR = (1<< TWINT)|(1<<TWEN)|(1<<TWEA);   // if want to read more than 1 byte
+  62:	84 ec       	ldi	r24, 0xC4	; 196
+  64:	86 bf       	out	0x36, r24	; 54
+  66:	02 c0       	rjmp	.+4      	; 0x6c <i2c_read+0xe>
+  else				
+    TWCR = (1<< TWINT)|(1<<TWEN);   // if want to read only 1 byte
+  68:	84 e8       	ldi	r24, 0x84	; 132
+  6a:	86 bf       	out	0x36, r24	; 54
+  while ((TWCR & (1 <<TWINT)) == 0);
+  6c:	06 b6       	in	r0, 0x36	; 54
+  6e:	07 fe       	sbrs	r0, 7
+  70:	fd cf       	rjmp	.-6      	; 0x6c <i2c_read+0xe>
+  return TWDR  ;
+  72:	83 b1       	in	r24, 0x03	; 3
+}
+  74:	08 95       	ret
+
+00000076 <i2c_readStatus>:
+
+unsigned char i2c_readStatus(void){
+	return (TWSR & 0xF8);
+  76:	81 b1       	in	r24, 0x01	; 1
+}
+  78:	88 7f       	andi	r24, 0xF8	; 248
+  7a:	08 95       	ret
+
+0000007c <i2c_stop>:
+
+void i2c_stop()
+{
+  TWCR = (1<< TWINT)|(1<<TWEN)|(1<<TWSTO);
+  7c:	84 e9       	ldi	r24, 0x94	; 148
+  7e:	86 bf       	out	0x36, r24	; 54
+  80:	08 95       	ret
+
+00000082 <TWI_Read_Byte>:
+#define EEPROM1_WR 0b10100010	// write EEPROM 1 SLA_W address, lsb = 0 for write
+#define EEPROM1_RD 0b10100011	// read EEPROM 1 SLA_R address, lsb = 1 for read
+
+
+
+unsigned char TWI_Read_Byte(unsigned int addr) {
+  82:	cf 93       	push	r28
+  84:	c8 2f       	mov	r28, r24
+	unsigned char i = 0 ;
+	
+	i2c_start();
+  86:	de df       	rcall	.-68     	; 0x44 <i2c_start>
+	while(i2c_readStatus()!= 0x08);
+  88:	f6 df       	rcall	.-20     	; 0x76 <i2c_readStatus>
+  8a:	88 30       	cpi	r24, 0x08	; 8
+  8c:	e9 f7       	brne	.-6      	; 0x88 <TWI_Read_Byte+0x6>
+
+	i2c_write(EEPROM1_WR);   // Slave address EEPROM 1, Write
+  8e:	82 ea       	ldi	r24, 0xA2	; 162
+  90:	df df       	rcall	.-66     	; 0x50 <i2c_write>
+	while(i2c_readStatus()!= 0x18);
+  92:	f1 df       	rcall	.-30     	; 0x76 <i2c_readStatus>
+  94:	88 31       	cpi	r24, 0x18	; 24
+  96:	e9 f7       	brne	.-6      	; 0x92 <TWI_Read_Byte+0x10>
+	
+	i2c_write((unsigned char)(addr) >> 8);   // Send high-byte of memory address
+  98:	80 e0       	ldi	r24, 0x00	; 0
+  9a:	da df       	rcall	.-76     	; 0x50 <i2c_write>
+	while(i2c_readStatus()!= 0x28);
+  9c:	ec df       	rcall	.-40     	; 0x76 <i2c_readStatus>
+  9e:	88 32       	cpi	r24, 0x28	; 40
+  a0:	e9 f7       	brne	.-6      	; 0x9c <TWI_Read_Byte+0x1a>
+	
+	i2c_write((unsigned char)(addr));        // Send low-byte of memory address
+  a2:	8c 2f       	mov	r24, r28
+  a4:	d5 df       	rcall	.-86     	; 0x50 <i2c_write>
+	while(i2c_readStatus()!= 0x28);
+  a6:	e7 df       	rcall	.-50     	; 0x76 <i2c_readStatus>
+  a8:	88 32       	cpi	r24, 0x28	; 40
+  aa:	e9 f7       	brne	.-6      	; 0xa6 <TWI_Read_Byte+0x24>
+	
+	i2c_start();   // send a Re-start condition
+  ac:	cb df       	rcall	.-106    	; 0x44 <i2c_start>
+	while(i2c_readStatus()!= 0x10);
+  ae:	e3 df       	rcall	.-58     	; 0x76 <i2c_readStatus>
+  b0:	80 31       	cpi	r24, 0x10	; 16
+  b2:	e9 f7       	brne	.-6      	; 0xae <TWI_Read_Byte+0x2c>
+
+	i2c_write(EEPROM1_RD);   // Slave address EEPROM 1, Read
+  b4:	83 ea       	ldi	r24, 0xA3	; 163
+  b6:	cc df       	rcall	.-104    	; 0x50 <i2c_write>
+	while(i2c_readStatus()!= 0x40);
+  b8:	de df       	rcall	.-68     	; 0x76 <i2c_readStatus>
+  ba:	80 34       	cpi	r24, 0x40	; 64
+  bc:	e9 f7       	brne	.-6      	; 0xb8 <TWI_Read_Byte+0x36>
+	
+	i = i2c_read(1);// read 1 byte only
+  be:	81 e0       	ldi	r24, 0x01	; 1
+  c0:	ce df       	rcall	.-100    	; 0x5e <i2c_read>
+  c2:	c8 2f       	mov	r28, r24
+	
+	i2c_stop();   // send stop condition
+  c4:	db df       	rcall	.-74     	; 0x7c <i2c_stop>
+	
+	return i;
+}
+  c6:	8c 2f       	mov	r24, r28
+  c8:	cf 91       	pop	r28
+  ca:	08 95       	ret
+
+000000cc <main>:
+int main(void)
+{
+    unsigned int address = 0x00;
+	unsigned char datum;
+
+    DDRB |= (1<<PB0);   // PB0 is output. Used as monitor.
+  cc:	87 b3       	in	r24, 0x17	; 23
+  ce:	81 60       	ori	r24, 0x01	; 1
+  d0:	87 bb       	out	0x17, r24	; 23
+    PORTB = 0x01;   // Turn off LED on Port B pin 0 by outputting 1
+  d2:	81 e0       	ldi	r24, 0x01	; 1
+  d4:	88 bb       	out	0x18, r24	; 24
+	
+	i2c_init();   // initialize TWI module
+  d6:	b0 df       	rcall	.-160    	; 0x38 <i2c_init>
+	datum = TWI_Read_Byte(address);
+  d8:	80 e0       	ldi	r24, 0x00	; 0
+  da:	90 e0       	ldi	r25, 0x00	; 0
+  dc:	d2 df       	rcall	.-92     	; 0x82 <TWI_Read_Byte>
+	
+	if (datum == 0xAB)
+  de:	8b 3a       	cpi	r24, 0xAB	; 171
+  e0:	19 f4       	brne	.+6      	; 0xe8 <main+0x1c>
+	{
+		PORTB &= ~(1<<PB0); // Turn on PORTB pin 0 by outputting a 0
+  e2:	88 b3       	in	r24, 0x18	; 24
+  e4:	8e 7f       	andi	r24, 0xFE	; 254
+  e6:	88 bb       	out	0x18, r24	; 24
+	}
+	return 0;	
+}
+  e8:	80 e0       	ldi	r24, 0x00	; 0
+  ea:	90 e0       	ldi	r25, 0x00	; 0
+  ec:	08 95       	ret
+
+000000ee <_exit>:
+  ee:	f8 94       	cli
+
+000000f0 <__stop_program>:
+  f0:	ff cf       	rjmp	.-2      	; 0xf0 <__stop_program>

@@ -1,0 +1,296 @@
+
+ReadPageI2C_UART.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         00000178  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000012  00800060  00000178  000001ec  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .comment      00000030  00000000  00000000  000001fe  2**0
+                  CONTENTS, READONLY
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000230  2**2
+                  CONTENTS, READONLY
+  4 .debug_aranges 000000a8  00000000  00000000  0000026c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   000009bf  00000000  00000000  00000314  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 000006fa  00000000  00000000  00000cd3  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   000004cc  00000000  00000000  000013cd  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  00000120  00000000  00000000  0000189c  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    00000433  00000000  00000000  000019bc  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_loc    000001cf  00000000  00000000  00001def  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000078  00000000  00000000  00001fbe  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	12 c0       	rjmp	.+36     	; 0x26 <__ctors_end>
+   2:	24 c0       	rjmp	.+72     	; 0x4c <__bad_interrupt>
+   4:	23 c0       	rjmp	.+70     	; 0x4c <__bad_interrupt>
+   6:	22 c0       	rjmp	.+68     	; 0x4c <__bad_interrupt>
+   8:	21 c0       	rjmp	.+66     	; 0x4c <__bad_interrupt>
+   a:	20 c0       	rjmp	.+64     	; 0x4c <__bad_interrupt>
+   c:	1f c0       	rjmp	.+62     	; 0x4c <__bad_interrupt>
+   e:	1e c0       	rjmp	.+60     	; 0x4c <__bad_interrupt>
+  10:	1d c0       	rjmp	.+58     	; 0x4c <__bad_interrupt>
+  12:	1c c0       	rjmp	.+56     	; 0x4c <__bad_interrupt>
+  14:	1b c0       	rjmp	.+54     	; 0x4c <__bad_interrupt>
+  16:	1a c0       	rjmp	.+52     	; 0x4c <__bad_interrupt>
+  18:	19 c0       	rjmp	.+50     	; 0x4c <__bad_interrupt>
+  1a:	18 c0       	rjmp	.+48     	; 0x4c <__bad_interrupt>
+  1c:	17 c0       	rjmp	.+46     	; 0x4c <__bad_interrupt>
+  1e:	16 c0       	rjmp	.+44     	; 0x4c <__bad_interrupt>
+  20:	15 c0       	rjmp	.+42     	; 0x4c <__bad_interrupt>
+  22:	14 c0       	rjmp	.+40     	; 0x4c <__bad_interrupt>
+  24:	13 c0       	rjmp	.+38     	; 0x4c <__bad_interrupt>
+
+00000026 <__ctors_end>:
+  26:	11 24       	eor	r1, r1
+  28:	1f be       	out	0x3f, r1	; 63
+  2a:	cf e5       	ldi	r28, 0x5F	; 95
+  2c:	d4 e0       	ldi	r29, 0x04	; 4
+  2e:	de bf       	out	0x3e, r29	; 62
+  30:	cd bf       	out	0x3d, r28	; 61
+
+00000032 <__do_copy_data>:
+  32:	10 e0       	ldi	r17, 0x00	; 0
+  34:	a0 e6       	ldi	r26, 0x60	; 96
+  36:	b0 e0       	ldi	r27, 0x00	; 0
+  38:	e8 e7       	ldi	r30, 0x78	; 120
+  3a:	f1 e0       	ldi	r31, 0x01	; 1
+  3c:	02 c0       	rjmp	.+4      	; 0x42 <__SREG__+0x3>
+  3e:	05 90       	lpm	r0, Z+
+  40:	0d 92       	st	X+, r0
+  42:	a2 37       	cpi	r26, 0x72	; 114
+  44:	b1 07       	cpc	r27, r17
+  46:	d9 f7       	brne	.-10     	; 0x3e <__SP_H__>
+  48:	24 d0       	rcall	.+72     	; 0x92 <main>
+  4a:	94 c0       	rjmp	.+296    	; 0x174 <_exit>
+
+0000004c <__bad_interrupt>:
+  4c:	d9 cf       	rjmp	.-78     	; 0x0 <__vectors>
+
+0000004e <i2c_init>:
+  4e:	11 b8       	out	0x01, r1	; 1
+  50:	87 e4       	ldi	r24, 0x47	; 71
+  52:	80 b9       	out	0x00, r24	; 0
+  54:	84 e0       	ldi	r24, 0x04	; 4
+  56:	86 bf       	out	0x36, r24	; 54
+  58:	08 95       	ret
+
+0000005a <i2c_start>:
+  5a:	84 ea       	ldi	r24, 0xA4	; 164
+  5c:	86 bf       	out	0x36, r24	; 54
+  5e:	06 b6       	in	r0, 0x36	; 54
+  60:	07 fe       	sbrs	r0, 7
+  62:	fd cf       	rjmp	.-6      	; 0x5e <i2c_start+0x4>
+  64:	08 95       	ret
+
+00000066 <i2c_write>:
+  66:	83 b9       	out	0x03, r24	; 3
+  68:	84 e8       	ldi	r24, 0x84	; 132
+  6a:	86 bf       	out	0x36, r24	; 54
+  6c:	06 b6       	in	r0, 0x36	; 54
+  6e:	07 fe       	sbrs	r0, 7
+  70:	fd cf       	rjmp	.-6      	; 0x6c <i2c_write+0x6>
+  72:	08 95       	ret
+
+00000074 <i2c_read>:
+  74:	81 11       	cpse	r24, r1
+  76:	03 c0       	rjmp	.+6      	; 0x7e <i2c_read+0xa>
+  78:	84 ec       	ldi	r24, 0xC4	; 196
+  7a:	86 bf       	out	0x36, r24	; 54
+  7c:	02 c0       	rjmp	.+4      	; 0x82 <i2c_read+0xe>
+  7e:	84 e8       	ldi	r24, 0x84	; 132
+  80:	86 bf       	out	0x36, r24	; 54
+  82:	06 b6       	in	r0, 0x36	; 54
+  84:	07 fe       	sbrs	r0, 7
+  86:	fd cf       	rjmp	.-6      	; 0x82 <i2c_read+0xe>
+  88:	83 b1       	in	r24, 0x03	; 3
+  8a:	08 95       	ret
+
+0000008c <i2c_stop>:
+  8c:	84 e9       	ldi	r24, 0x94	; 148
+  8e:	86 bf       	out	0x36, r24	; 54
+  90:	08 95       	ret
+
+00000092 <main>:
+
+#define EEPROM1_WR 0b10100010	// write EEPROM 1 SLA_W address, lsb = 0 for write
+#define EEPROM1_RD 0b10100011	// read EEPROM 1 SLA_R address, lsb = 1 for read
+
+int main(void)
+{
+  92:	cf 93       	push	r28
+  94:	df 93       	push	r29
+  96:	cd b7       	in	r28, 0x3d	; 61
+  98:	de b7       	in	r29, 0x3e	; 62
+  9a:	c2 54       	subi	r28, 0x42	; 66
+  9c:	d1 09       	sbc	r29, r1
+  9e:	0f b6       	in	r0, 0x3f	; 63
+  a0:	f8 94       	cli
+  a2:	de bf       	out	0x3e, r29	; 62
+  a4:	0f be       	out	0x3f, r0	; 63
+  a6:	cd bf       	out	0x3d, r28	; 61
+	unsigned char buffer[64];
+	unsigned char i;
+	unsigned char C1, C2;
+
+	USART_init(MyBaud);
+  a8:	83 e3       	ldi	r24, 0x33	; 51
+  aa:	90 e0       	ldi	r25, 0x00	; 0
+  ac:	46 d0       	rcall	.+140    	; 0x13a <USART_init>
+	i2c_init();
+  ae:	cf df       	rcall	.-98     	; 0x4e <i2c_init>
+	i2c_start();
+  b0:	d4 df       	rcall	.-88     	; 0x5a <i2c_start>
+	i2c_write(EEPROM1_WR);   // Slave address EEPROM 1, Write
+  b2:	82 ea       	ldi	r24, 0xA2	; 162
+  b4:	d8 df       	rcall	.-80     	; 0x66 <i2c_write>
+	i2c_write(0x00);         // high-byte of memory address
+  b6:	80 e0       	ldi	r24, 0x00	; 0
+  b8:	d6 df       	rcall	.-84     	; 0x66 <i2c_write>
+	i2c_write(0x00);         // high-byte of memory address
+  ba:	80 e0       	ldi	r24, 0x00	; 0
+  bc:	d4 df       	rcall	.-88     	; 0x66 <i2c_write>
+	i2c_start();             // Repeated Start condition
+  be:	cd df       	rcall	.-102    	; 0x5a <i2c_start>
+	i2c_write(EEPROM1_RD);   // Slave address EEPROM 1, Read
+  c0:	83 ea       	ldi	r24, 0xA3	; 163
+  c2:	d1 df       	rcall	.-94     	; 0x66 <i2c_write>
+	
+	// Read the first 63 bytes while sending ACK.
+	for (i=0; i<63; ++i) {
+  c4:	00 e0       	ldi	r16, 0x00	; 0
+  c6:	0c c0       	rjmp	.+24     	; 0xe0 <main+0x4e>
+		buffer[i] = i2c_read(0);
+  c8:	e0 2e       	mov	r14, r16
+  ca:	f1 2c       	mov	r15, r1
+  cc:	80 e0       	ldi	r24, 0x00	; 0
+  ce:	d2 df       	rcall	.-92     	; 0x74 <i2c_read>
+  d0:	e1 e0       	ldi	r30, 0x01	; 1
+  d2:	f0 e0       	ldi	r31, 0x00	; 0
+  d4:	ec 0f       	add	r30, r28
+  d6:	fd 1f       	adc	r31, r29
+  d8:	ee 0d       	add	r30, r14
+  da:	ff 1d       	adc	r31, r15
+  dc:	80 83       	st	Z, r24
+	i2c_write(0x00);         // high-byte of memory address
+	i2c_start();             // Repeated Start condition
+	i2c_write(EEPROM1_RD);   // Slave address EEPROM 1, Read
+	
+	// Read the first 63 bytes while sending ACK.
+	for (i=0; i<63; ++i) {
+  de:	0f 5f       	subi	r16, 0xFF	; 255
+  e0:	0f 33       	cpi	r16, 0x3F	; 63
+  e2:	90 f3       	brcs	.-28     	; 0xc8 <main+0x36>
+		buffer[i] = i2c_read(0);
+	}
+	// Read the last byte (byte 64) and send a NACK (i.e. don't send an ACK).
+	buffer[i] = i2c_read(1);
+  e4:	10 e0       	ldi	r17, 0x00	; 0
+  e6:	81 e0       	ldi	r24, 0x01	; 1
+  e8:	c5 df       	rcall	.-118    	; 0x74 <i2c_read>
+  ea:	e1 e0       	ldi	r30, 0x01	; 1
+  ec:	f0 e0       	ldi	r31, 0x00	; 0
+  ee:	ec 0f       	add	r30, r28
+  f0:	fd 1f       	adc	r31, r29
+  f2:	e0 0f       	add	r30, r16
+  f4:	f1 1f       	adc	r31, r17
+  f6:	80 83       	st	Z, r24
+	i2c_stop();
+  f8:	c9 df       	rcall	.-110    	; 0x8c <i2c_stop>
+	while(1){
+		// Send read bytes to serial port UART as ASCII.
+		for (i=0; i<64; ++i) {
+  fa:	10 e0       	ldi	r17, 0x00	; 0
+  fc:	1b c0       	rjmp	.+54     	; 0x134 <main+0xa2>
+			hex2ascii(buffer[i], &C1, &C2);		
+  fe:	e1 e0       	ldi	r30, 0x01	; 1
+ 100:	f0 e0       	ldi	r31, 0x00	; 0
+ 102:	ec 0f       	add	r30, r28
+ 104:	fd 1f       	adc	r31, r29
+ 106:	e1 0f       	add	r30, r17
+ 108:	f1 1d       	adc	r31, r1
+ 10a:	ae 01       	movw	r20, r28
+ 10c:	4e 5b       	subi	r20, 0xBE	; 190
+ 10e:	5f 4f       	sbci	r21, 0xFF	; 255
+ 110:	be 01       	movw	r22, r28
+ 112:	6f 5b       	subi	r22, 0xBF	; 191
+ 114:	7f 4f       	sbci	r23, 0xFF	; 255
+ 116:	80 81       	ld	r24, Z
+ 118:	1b d0       	rcall	.+54     	; 0x150 <hex2ascii>
+			USART_Transmit(C1);
+ 11a:	22 96       	adiw	r28, 0x02	; 2
+ 11c:	8f ad       	ldd	r24, Y+63	; 0x3f
+ 11e:	22 97       	sbiw	r28, 0x02	; 2
+ 120:	13 d0       	rcall	.+38     	; 0x148 <USART_Transmit>
+			USART_Transmit(C2);
+ 122:	23 96       	adiw	r28, 0x03	; 3
+ 124:	8f ad       	ldd	r24, Y+63	; 0x3f
+ 126:	23 97       	sbiw	r28, 0x03	; 3
+ 128:	0f d0       	rcall	.+30     	; 0x148 <USART_Transmit>
+			USART_Transmit(',');    // Echo back a carriage return to go to beginning of new line
+ 12a:	8c e2       	ldi	r24, 0x2C	; 44
+ 12c:	0d d0       	rcall	.+26     	; 0x148 <USART_Transmit>
+			USART_Transmit(' ');
+ 12e:	80 e2       	ldi	r24, 0x20	; 32
+ 130:	0b d0       	rcall	.+22     	; 0x148 <USART_Transmit>
+	// Read the last byte (byte 64) and send a NACK (i.e. don't send an ACK).
+	buffer[i] = i2c_read(1);
+	i2c_stop();
+	while(1){
+		// Send read bytes to serial port UART as ASCII.
+		for (i=0; i<64; ++i) {
+ 132:	1f 5f       	subi	r17, 0xFF	; 255
+ 134:	10 34       	cpi	r17, 0x40	; 64
+ 136:	18 f3       	brcs	.-58     	; 0xfe <main+0x6c>
+ 138:	e0 cf       	rjmp	.-64     	; 0xfa <main+0x68>
+
+0000013a <USART_init>:
+ 13a:	90 bd       	out	0x20, r25	; 32
+ 13c:	89 b9       	out	0x09, r24	; 9
+ 13e:	88 e1       	ldi	r24, 0x18	; 24
+ 140:	8a b9       	out	0x0a, r24	; 10
+ 142:	86 e8       	ldi	r24, 0x86	; 134
+ 144:	80 bd       	out	0x20, r24	; 32
+ 146:	08 95       	ret
+
+00000148 <USART_Transmit>:
+ 148:	5d 9b       	sbis	0x0b, 5	; 11
+ 14a:	fe cf       	rjmp	.-4      	; 0x148 <USART_Transmit>
+ 14c:	8c b9       	out	0x0c, r24	; 12
+ 14e:	08 95       	ret
+
+00000150 <hex2ascii>:
+ 150:	e8 2f       	mov	r30, r24
+ 152:	e2 95       	swap	r30
+ 154:	ef 70       	andi	r30, 0x0F	; 15
+ 156:	f0 e0       	ldi	r31, 0x00	; 0
+ 158:	e0 5a       	subi	r30, 0xA0	; 160
+ 15a:	ff 4f       	sbci	r31, 0xFF	; 255
+ 15c:	90 81       	ld	r25, Z
+ 15e:	fb 01       	movw	r30, r22
+ 160:	90 83       	st	Z, r25
+ 162:	8f 70       	andi	r24, 0x0F	; 15
+ 164:	e8 2f       	mov	r30, r24
+ 166:	f0 e0       	ldi	r31, 0x00	; 0
+ 168:	e0 5a       	subi	r30, 0xA0	; 160
+ 16a:	ff 4f       	sbci	r31, 0xFF	; 255
+ 16c:	80 81       	ld	r24, Z
+ 16e:	fa 01       	movw	r30, r20
+ 170:	80 83       	st	Z, r24
+ 172:	08 95       	ret
+
+00000174 <_exit>:
+ 174:	f8 94       	cli
+
+00000176 <__stop_program>:
+ 176:	ff cf       	rjmp	.-2      	; 0x176 <__stop_program>
