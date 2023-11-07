@@ -25,7 +25,7 @@ int main(void) {
 			
 			// Mode 00: Data Acquisition
 			PORTD ^= (1 << PD5); // Toggle the LED state
-			_delay_ms(50);     // Delay for half a second
+			_delay_ms(50);     // Delay for 50 ms
 			
 			} 
 			
@@ -41,7 +41,7 @@ int main(void) {
 				 
 				// Mode 10: Idle
 				PORTD ^= (1 << PD5); // Toggle the LED state
-				_delay_ms(1000);     // Delay for half a second
+				_delay_ms(1000);     // Delay for one second
 			
 		}
 	}
