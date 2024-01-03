@@ -1,11 +1,3 @@
-/*
- * MyADC.h
- *
- * Created: 9/24/2023 1:25:34 PM
- *  Author: Amer Qouneh
- */ 
-
-
 #ifndef MYADC_H_
 #define MYADC_H_
 
