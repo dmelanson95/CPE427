@@ -1,5 +1,12 @@
-#ifndef MYUART_H
-#define MYUART_H
+/*
+ * MyUART.h
+ *
+ * Created: 11/9/2023 3:34:19 PM
+ *  Author: David Melanson
+ */ 
+
+#ifndef MYUART_H_INCLUDED
+#define MYUART_H_INCLUDED
 
 typedef unsigned char UC;
 typedef unsigned int UI;
