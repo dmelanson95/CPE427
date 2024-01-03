@@ -1,10 +1,3 @@
-/*
- * MyADC.c
- *
- * Created: 9/24/2023 1:25:53 PM
- *  Author: Amer Qouneh
- */ 
-
 
 #include <avr/io.h>
 #include "MyADC.h"
